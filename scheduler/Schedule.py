@@ -1,4 +1,6 @@
 from abc import abstractmethod, ABC
+from taskset import TaskSet
+from job import Job
 
 class Schedule(ABC):
 
@@ -6,5 +8,5 @@ class Schedule(ABC):
         pass
 
     @abstractmethod
-    def schedule(self, task_set):
+    def schedule(self, task_set: TaskSet) -> Job:
         pass

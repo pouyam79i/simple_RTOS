@@ -59,6 +59,12 @@ class TaskSet:
                 jobs.append(job)
         self.remaining_jobs = jobs
 
+    # adds a new job to the ready queue
+    def add_new_job(self, task: Task, cpu_time: int):
+        new_job = Job(task, cpu_time)
+        new_job.state = READY
+        self.remaining_jobs.append(new_job)
+
     # create instance of jobs in the right time
     def update_jobs(self, cpu_time):
         self.update_completed()
@@ -66,7 +72,7 @@ class TaskSet:
         for task in self.tasks:
             if task.type == PERIODIC and task.period > 0:
                 if (cpu_time - task.act_time) % task.period == 0:
-                    self.remaining_jobs.append(Job(task, cpu_time))
+                    self.add_new_job(task, cpu_time)
             elif task.type != PERIODIC and task.act_time == cpu_time:
-                self.remaining_jobs.append(Job(task, cpu_time))
-            
+                self.add_new_job(task, cpu_time)
+        

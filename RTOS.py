@@ -4,6 +4,7 @@ from scheduler.DM import DM
 from scheduler.RM import RM
 from scheduler.Schedule import Schedule
 from taskset import TaskSet
+from task import RUNNING, COMPLETED, READY, SUSPENDED
 
 class RTOS:
 
@@ -14,14 +15,13 @@ class RTOS:
         self.cpu_time = 0
 
         self.task_set = task_set
-        self.executing_task = None
+        self.executing_job = None
 
         # duration list shows which task was running at what time! - only print it in debug mode
-        self.duration_list = []
+        self.task_duration_list = []
         self.total_executing_time = 0
 
         # set scheduler
-        self.scheduler = Schedule()
         if scheduler_kind == 'NP_EDF':
             self.scheduler = NP_EDF()
         elif scheduler_kind == 'RM':
@@ -32,24 +32,58 @@ class RTOS:
             # Default scheduler
             self.scheduler = EDF()
 
+    # TODO: check the non increasing over job.increase_uptime() - if it returns non zero - must split duration
+    # append latest executing task duration to this list for simulation purposes
+    def append_task_duration(self, name: str, start: int, stop: int):
+        self.task_duration_list.append({name: (start, stop)})
+
     # TODO: complete here
     def run(self, duration=100):
 
-        duration = 0
-        for i in range(duration):
+        latest_activation = 0
 
-            task = self.scheduler.schedule(self.task_set)
-            if task == None:
-                # TODO: preempt task if one is executing
-                if self.executing_task != None:
-                    pass  
+        for i in range(duration):
+            # get a job to execute
+            job = self.scheduler.schedule(self.task_set)
+
+            if job == None:
+                # preempt job if one is executing
+                if self.executing_job != None:
+                    if self.executing_job.state == RUNNING:
+                        self.executing_job.state = READY
+                    self.append_task_duration(self.executing_job.get_name(), latest_activation, self.cpu_time)
+                    self.executing_job = None
+                latest_activation = self.cpu_time
             else:
-                if task.uuid == self.executing_task.uuid:
-                    duration += 1
+                # new job is being exec
+                if self.executing_job == None:
+                    if job.state == READY:
+                        latest_activation = self.cpu_time
+                        job.state == RUNNING
+                        if job.increase_uptime() == 0:
+                            self.total_executing_time += 1
+                        self.executing_job = job
+                # no changes to previous job - continue executing
+                elif job.uuid == self.executing_job.uuid:
+                    if job.increase_uptime() == 0:
+                        self.total_executing_time += 1
+                # preempt previous job and make set given job to executioner
                 else:
-                    # TODO: preempt current and exec new one
-                    pass
+                    self.executing_job.set_state(READY)
+                    self.append_task_duration(self.executing_job.get_name(), latest_activation, self.cpu_time)
+                    latest_activation = self.cpu_time
+                    self.executing_job = job
+                    self.executing_job.set_state(RUNNING)
+                    if job.increase_uptime() == 0:
+                        self.total_executing_time += 1
+
+            # go to next clock
+            self.cpu_time += 1
 
         # TODO: add duration for last task
-        if self.executing_task != None:
+        if self.executing_job != None:
                 pass
+    
+    def print_result(self):
+        for item in self.task_duration_list:
+            print(item)

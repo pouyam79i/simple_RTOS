@@ -17,14 +17,14 @@ class Job:
     # increase on step of time on this task
     def increase_uptime(self):
         if self.state != RUNNING:
-            return -1
+            return -1 # suspended or ready
         if self.uptime < self.wcet:
             self.uptime += 1
             if self.uptime == self.wcet:
                 self.state = COMPLETED
-            return 1
-        else:
             return 0
+        else:
+            return 1 # completed
         
     # returns state of task
     def get_state(self):

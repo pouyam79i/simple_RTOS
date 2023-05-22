@@ -5,7 +5,6 @@ from scheduler.RM import RM
 from scheduler.Schedule import Schedule
 from taskset import TaskSet
 from task import RUNNING, COMPLETED, READY, SUSPENDED
-
 class RTOS:
 
     # GIVEN and algorithm 

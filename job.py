@@ -10,6 +10,9 @@ class Job:
         self.ADeadline = task.deadline + act_time # absolute
         self.deadline = task.deadline # relative
         self.wcet = task.wcet # worst case execution time
+        self.type = task.type # type
+        self.period = task.period # period - just for easier access
+        self.priority = task.priority # priority
         # uptime is used to find how much of a task has been executed
         self.uptime = 0
         self.state = task.state

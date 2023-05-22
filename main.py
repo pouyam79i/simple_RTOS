@@ -1,5 +1,4 @@
 import sys
-import string
 from RTOS import RTOS
 from taskset import TaskSet
 
@@ -17,7 +16,7 @@ def main(argv):
       except:
          duration = DEFAULT_DURATION
    if len(argv) > 1:
-      scheduler_kind = string.upper(argv[1])
+      scheduler_kind = argv[1]
    if len(argv) > 2:
       filename = argv[2]
 

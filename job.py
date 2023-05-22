@@ -54,3 +54,7 @@ class Job:
     def get_name(self):
         return self.task.name
     
+    # return priority of task
+    def get_priority(self):
+        return self.task.priority
+    

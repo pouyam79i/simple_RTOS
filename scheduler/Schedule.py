@@ -8,5 +8,5 @@ class Schedule(ABC):
         pass
 
     @abstractmethod
-    def schedule(self, task_set: TaskSet) -> Job:
+    def schedule(self, task_set: TaskSet, cpu_time: int) -> Job:
         pass

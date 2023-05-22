@@ -11,5 +11,5 @@ class DM(Schedule):
         
     # decide for the current task_set
     # output must be only the next running task or None.
-    def schedule(self, task_set: TaskSet) -> Job:
-        pass
+    def schedule(self, task_set: TaskSet, cpu_time: int) -> Job:
+        return None

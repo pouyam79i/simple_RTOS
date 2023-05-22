@@ -44,7 +44,7 @@ class RTOS:
 
         for i in range(duration):
             # get a job to execute
-            job = self.scheduler.schedule(self.task_set)
+            job = self.scheduler.schedule(self.task_set, self.cpu_time)
 
             if job == None:
                 # preempt job if one is executing
@@ -85,5 +85,9 @@ class RTOS:
                 pass
     
     def print_result(self):
+
+        print("Utilization: {}".format(self.total_executing_time/self.cpu_time))
+        print("Feasibility: {}".format(str(self.task_set.feasible)))
+        print("Task Durations:")
         for item in self.task_duration_list:
             print(item)

@@ -30,6 +30,7 @@ def main(argv):
    rtos = RTOS(task_set, scheduler_kind)
    # run tasks with given duration(max cpu time)
    rtos.run(duration)
+   rtos.print_result()
 
 # Run app main
 if __name__ == "__main__":

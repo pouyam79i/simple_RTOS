@@ -4,6 +4,7 @@ from scheduler.DM import DM
 from scheduler.RM import RM
 from scheduler.Schedule import Schedule
 from taskset import TaskSet
+from chart import Chart
 from task import RUNNING, COMPLETED, READY, SUSPENDED
 class RTOS:
 
@@ -34,7 +35,7 @@ class RTOS:
     # TODO: check the non increasing over job.increase_uptime() - if it returns non zero - must split duration
     # append latest executing task duration to this list for simulation purposes
     def append_task_duration(self, name: str, start: int, stop: int):
-        self.task_duration_list.append({name: (start, stop)})
+        self.task_duration_list.append({'name':name, 'duration':(start, stop)})
 
     # TODO: complete here
     def run(self, duration=100):
@@ -86,10 +87,15 @@ class RTOS:
         if self.executing_job != None:
             self.append_task_duration(self.executing_job.get_name(), latest_activation, self.cpu_time)
     
-    def print_result(self):
+    # displays result
+    def print_result(self, chart_mode):
 
         print("Utilization: {}".format(self.total_executing_time/self.cpu_time))
         print("Feasibility: {}".format(str(self.task_set.feasible)))
         print("Task Durations:")
         for item in self.task_duration_list:
             print(item)
+
+        if chart_mode == 'ON':
+            chart = Chart(self.task_duration_list)
+            chart.draw()

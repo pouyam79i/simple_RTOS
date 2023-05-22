@@ -47,7 +47,7 @@ class RM(Schedule):
                         min_period = job.period
                         selected_job = job
                     elif job.period == selected_job.period:
-                        if job.priority > selected_job.priority:
+                        if job.priority < selected_job.priority:
                             min_period = job.period
                             selected_job = job
                         elif job.priority == selected_job.priority and job.ADeadline < selected_job.ADeadline:

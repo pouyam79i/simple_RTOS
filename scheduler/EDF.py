@@ -34,7 +34,8 @@ class EDF(Schedule):
                     selected_job = job
                 else:
                     # select high priority
-                    if selected_job.get_priority() < job.get_priority():
+                    if selected_job.get_priority() > job.get_priority():
                         selected_job = job
+                        min_deadline = job.ADeadline
 
         return selected_job

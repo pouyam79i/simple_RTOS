@@ -59,7 +59,7 @@ class RTOS:
                 if self.executing_job == None:
                     if job.state == READY:
                         latest_activation = self.cpu_time
-                        job.state == RUNNING
+                        job.state = RUNNING
                         if job.increase_uptime() == 0:
                             self.total_executing_time += 1
                         self.executing_job = job
@@ -77,12 +77,15 @@ class RTOS:
                     if job.increase_uptime() == 0:
                         self.total_executing_time += 1
 
+                # debug
+                # if self.executing_job != None:
+                #     print("Job info-> uuid: {}, name: {}, uptime: {}, state: {}, ADeadline: {}, cpu_time: {}".format(self.executing_job.uuid, self.executing_job.get_name(), self.executing_job.uptime, self.executing_job.state, self.executing_job.ADeadline, self.cpu_time))
+
             # go to next clock
             self.cpu_time += 1
 
-        # TODO: add duration for last task
         if self.executing_job != None:
-                pass
+            self.append_task_duration(self.executing_job.get_name(), latest_activation, self.cpu_time)
     
     def print_result(self):
 

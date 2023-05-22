@@ -26,7 +26,7 @@ class TaskSet:
             taskreader = csv.reader(csvfile, delimiter=',',)
             next(taskreader, None)  # skip the headers
             for row in taskreader:
-                # priority,name,  state, type, act_time, period, wcet, deadline = row
+                # priority,name,state,type,act_time,period,wcet,deadline
                 task = Task(
                     priority=int(row[0]),
                     name=row[1],
@@ -64,6 +64,7 @@ class TaskSet:
         new_job = Job(task, cpu_time)
         new_job.state = READY
         self.remaining_jobs.append(new_job)
+        # print("#DEBUG-job creation job name: {}, act_time: {}, ADeadline: {}, WCET: {}".format(new_job.get_name(), new_job.act_time, new_job.ADeadline, new_job.wcet))
 
     # create instance of jobs in the right time
     def update_jobs(self, cpu_time):

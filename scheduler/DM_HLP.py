@@ -48,6 +48,9 @@ class DM_HLP(Schedule):
 
         # Used DM to find a task
         for job in task_set.remaining_jobs:
+            if job.is_deadline_missed(cpu_time):
+                task_set.set_unfeasible()
+            
             if selected_job == None:
                 selected_job = job
             else:

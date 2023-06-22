@@ -20,16 +20,11 @@ class DM_NPP(Schedule):
         task_set.update_jobs(cpu_time)
         selected_job = None
         
-        # check lock
-        if self.semaphore_lock:
-            if self.locked_by_job.state != COMPLETED:
-                return self.locked_by_job
-            else:
-                self.semaphore_lock = False
-                self.locked_by_job = None
-        
         # Used DM to find a task
         for job in task_set.remaining_jobs:
+            if job.is_deadline_missed(cpu_time):
+                task_set.set_unfeasible()
+            
             if selected_job == None:
                 selected_job = job
             else:
@@ -39,6 +34,14 @@ class DM_NPP(Schedule):
                     selected_job = job
                 elif job.deadline == selected_job.deadline and selected_job.priority == job.priority and job.act_time < selected_job.act_time:
                     selected_job = job
+                    
+        # check lock
+        if self.semaphore_lock:
+            if self.locked_by_job.state != COMPLETED:
+                return self.locked_by_job
+            else:
+                self.semaphore_lock = False
+                self.locked_by_job = None
         
         # set lock if needed
         if selected_job != None:

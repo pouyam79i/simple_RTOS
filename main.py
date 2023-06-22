@@ -1,3 +1,4 @@
+#!/usr/bin/env python3.6
 import sys, getopt
 from RTOS import RTOS
 from taskset import TaskSet
@@ -30,11 +31,11 @@ def main(opts, argv):
       if opt in ("-d", "-duration"):
          if int(arg) > 10:
             try:
-               duration = int(argv[0])
+               duration = int(arg)
             except:
                duration = DEFAULT_DURATION
       elif opt in ("-s", "-scheduler"):
-         scheduler_kind = arg
+         scheduler_kind = arg.upper()
       elif opt in ("-j", "-json"):
          filename = arg + '.json'
       elif opt in ("-t", "-taskset"):
@@ -43,7 +44,7 @@ def main(opts, argv):
          if arg.upper() == 'ON':
             chart_mode = 'ON'
 
-   print("Running main app with duration: {} and scheduler kind: {} and filename: {}".format(duration, scheduler_kind, filename))
+   print("Running main app with duration: {} and scheduler kind: {} and filename: {} - chart mode: {}".format(duration, scheduler_kind, filename, chart_mode))
 
    # TODO: load task set
    task_set = TaskSet()
@@ -62,5 +63,5 @@ def main(opts, argv):
 # Run app main
 if __name__ == "__main__":
    args = sys.argv[1:]
-   opts, argv = getopt.getopt(args,"d:s:j:t:c",["duration=","scheduler=","json=","taskset=","chart="])
+   opts, argv = getopt.getopt(args,"d:s:j:t:c:",["duration=","scheduler=","json=","taskset=","chart="])
    main(opts, argv)

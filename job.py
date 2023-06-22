@@ -63,3 +63,14 @@ class Job:
     def get_priority(self):
         return self.task.priority
     
+    # returns task section ID
+    def get_section(self):
+        if len(self.section) < 1:
+            return 0
+        up = 0
+        for part in self.section:
+            up += part[1]
+            if self.uptime < up:
+                return part[0]
+        print('section declaration error')
+        return 0

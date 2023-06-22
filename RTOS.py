@@ -1,8 +1,9 @@
 from scheduler.EDF import EDF
 from scheduler.NP_EDF import NP_EDF
 from scheduler.DM import DM
+from scheduler.DM_NPP import DM_NPP
+from scheduler.DM_HLP import DM_HLP
 from scheduler.RM import RM
-from scheduler.Schedule import Schedule
 from taskset import TaskSet
 from chart import Chart
 from task import RUNNING, COMPLETED, READY, SUSPENDED
@@ -28,6 +29,10 @@ class RTOS:
             self.scheduler = RM()
         elif scheduler_kind == 'DM':
             self.scheduler = DM()
+        elif scheduler_kind == 'DM_NPP':
+            self.scheduler = DM_NPP()
+        elif scheduler_kind == 'DM_HLP':
+            self.scheduler = DM_HLP()
         else:
             # Default scheduler
             self.scheduler = EDF()

@@ -16,6 +16,8 @@ class Job:
         # uptime is used to find how much of a task has been executed
         self.uptime = 0
         self.state = task.state
+        # set section
+        self.section = task.section
 
     # increase on step of time on this task
     def increase_uptime(self):

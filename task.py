@@ -26,6 +26,7 @@ class Task:
         self.period = period
         self.wcet = wcet
         self.deadline = deadline
+        self.section = []
 
     def set_completed(self): 
         self.state = COMPLETED

@@ -1,4 +1,5 @@
 import csv
+import json
 from task import *
 from job import Job
 
@@ -14,7 +15,11 @@ class TaskSet:
 
         # scheduler feasibility
         self.feasible = True
-
+        
+        # test duration information
+        self.start_time = -1
+        self.end_time = -1
+        
     # Call when you make sure the set is not feasible with current scheduler
     def set_unfeasible(self):
         self.feasible = False
@@ -37,6 +42,26 @@ class TaskSet:
                     wcet=int(row[6]),
                     deadline=int(row[7])
                 )
+                self.tasks.append(task)
+
+    # this function reads from json file according to given structure! (only periodic tasks)
+    def read_tasks_from_json(self, filename):
+        with open(filename, 'r') as jsonfile:
+            info = json.load(jsonfile)
+            self.start_time = info['startTime']
+            self.end_time = info['endTime']
+            for item in info['taskset']:
+                task = Task(
+                    name='task'+item['taskId'],
+                    period=item['period'],
+                    wcet=item['wcet'],
+                    deadline=item['deadline'],
+                    act_time=item['offset'],
+                    type=PERIODIC,
+                    state=READY,
+                    priority=1 # 0 for interrupts
+                )
+                task.section = item['sections']
                 self.tasks.append(task)
 
     # remove completed task from task list

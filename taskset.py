@@ -52,7 +52,7 @@ class TaskSet:
             self.end_time = info['endTime']
             for item in info['taskset']:
                 task = Task(
-                    name='task'+item['taskId'],
+                    name='task'+str(item['taskId']),
                     period=item['period'],
                     wcet=item['wcet'],
                     deadline=item['deadline'],

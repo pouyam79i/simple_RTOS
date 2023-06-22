@@ -4,7 +4,7 @@ from taskset import TaskSet
 
 DEFAULT_DURATION = 100      # 100 time steps as default
 DEFAULT_SCHEDULER = 'EDF'   
-DEFAULT_TASKSET = 'tasks1'  
+DEFAULT_TASKSET = 'tasks1.csv'  
 DEFAULT_CHART = 'OFF'
 
 def main(opts, argv):
@@ -12,33 +12,34 @@ def main(opts, argv):
    scheduler_kind = DEFAULT_SCHEDULER
    filename = DEFAULT_TASKSET
    chart_mode = DEFAULT_CHART
-   if len(argv) > 0:
-      try:
-         duration = int(argv[0])
-      except:
-         duration = DEFAULT_DURATION
-   if len(argv) > 1:
-      scheduler_kind = argv[1]
-   if len(argv) > 2:
-      filename = argv[2] + '.csv'
-   if len(argv) > 3:
-      if argv[3] == 'ON':
-         chart_mode = 'ON'
+   if len(opts) < 1:
+      if len(argv) > 0:
+         try:
+            duration = int(argv[0])
+         except:
+            duration = DEFAULT_DURATION
+      if len(argv) > 1:
+         scheduler_kind = argv[1]
+      if len(argv) > 2:
+         filename = argv[2] + '.csv'
+      if len(argv) > 3:
+         if argv[3] == 'ON':
+            chart_mode = 'ON'
 
    for opt, arg in opts:
-      if opt in ("d", "duration"):
-         if args > 10:
+      if opt in ("-d", "-duration"):
+         if int(arg) > 10:
             try:
                duration = int(argv[0])
             except:
                duration = DEFAULT_DURATION
-      elif opt in ("s", "scheduler"):
+      elif opt in ("-s", "-scheduler"):
          scheduler_kind = arg
-      elif opt in ("j", "json"):
+      elif opt in ("-j", "-json"):
          filename = arg + '.json'
-      elif opt in ("t", "taskset"):
+      elif opt in ("-t", "-taskset"):
          filename = arg + '.csv'
-      elif opt in ("c", "chart"):
+      elif opt in ("-c", "-chart"):
          if arg.upper() == 'ON':
             chart_mode = 'ON'
 
@@ -46,7 +47,12 @@ def main(opts, argv):
 
    # TODO: load task set
    task_set = TaskSet()
-   task_set.read_tasks_from_csv('tasks/' + filename)
+   if filename.endswith('.csv'):
+      task_set.read_tasks_from_csv('tasks/' + filename)
+   elif filename.endswith('.json'):
+      task_set.read_tasks_from_json('tasks/' + filename)
+   else:
+      exit()
    # build os kernel :DDDDDD
    rtos = RTOS(task_set, scheduler_kind)
    # run tasks with given duration(max cpu time)
@@ -56,5 +62,5 @@ def main(opts, argv):
 # Run app main
 if __name__ == "__main__":
    args = sys.argv[1:]
-   opt, argv = getopt.getopt(args,"d:s:j:t:c",["duration=","scheduler=","json=","taskset=","chart="])
+   opts, argv = getopt.getopt(args,"d:s:j:t:c",["duration=","scheduler=","json=","taskset=","chart="])
    main(opts, argv)

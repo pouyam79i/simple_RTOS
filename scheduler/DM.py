@@ -20,6 +20,7 @@ class DM(Schedule):
         selected_job = None
 
         for job in task_set.remaining_jobs:
+            # abort job on miss
             if job.is_deadline_missed(cpu_time):
                 task_set.set_unfeasible()
                 continue
